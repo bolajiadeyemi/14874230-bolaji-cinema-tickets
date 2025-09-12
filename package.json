@@ -7,10 +7,10 @@
   },
   "type": "module",
   "scripts": {
-    "test": "jest --passWithNoTests",
-    "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage",
-    "test:integration": "jest --testPathPatterns=integration --passWithNoTests"
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests",
+    "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watchAll",
+    "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
+    "test:integration": "node --experimental-vm-modules node_modules/.bin/jest --testPathPatterns=integration --passWithNoTests"
   },
   "devDependencies": {
     "@jest/globals": "^30.1.2",

@@ -2,6 +2,8 @@
 import TicketService from '../src/pairtest/TicketService.js';
 import TicketTypeRequest from '../src/pairtest/lib/TicketTypeRequest.js';
 import InvalidPurchaseException from '../src/pairtest/lib/InvalidPurchaseException.js';
+import TicketPaymentService from '../src/thirdparty/paymentgateway/TicketPaymentService.js';
+import SeatReservationService from '../src/thirdparty/seatbooking/SeatReservationService.js';
 
 describe('TicketService', () => {
     describe('purchaseTickets', () => {
@@ -88,6 +90,52 @@ describe('TicketService', () => {
             expect(() => {
                 ticketService.purchaseTickets(1, new TicketTypeRequest('ADULT', 25));
             }).not.toThrow();
+        });
+
+        // Error Handling Tests
+        it('should throw InvalidPurchaseException when payment service fails', () => {
+            const ticketService = new TicketService();
+
+            // Mock the payment service prototype to throw an error
+            const originalMakePayment = TicketPaymentService.prototype.makePayment;
+            TicketPaymentService.prototype.makePayment = function () {
+                throw new Error('Payment gateway unavailable');
+            };
+
+            expect(() => {
+                ticketService.purchaseTickets(1, new TicketTypeRequest('ADULT', 1));
+            }).toThrow(InvalidPurchaseException);
+
+            TicketPaymentService.prototype.makePayment = originalMakePayment;
+        });
+
+        it('should throw InvalidPurchaseException when seat reservation service fails', () => {
+            const ticketService = new TicketService();
+            const originalReserveSeat = SeatReservationService.prototype.reserveSeat;
+            SeatReservationService.prototype.reserveSeat = function () {
+                throw new Error('Seat reservation system down');
+            };
+
+            expect(() => {
+                ticketService.purchaseTickets(1, new TicketTypeRequest('ADULT', 1));
+            }).toThrow(InvalidPurchaseException);
+
+            SeatReservationService.prototype.reserveSeat = originalReserveSeat;
+        });
+
+        it('should include original error message in InvalidPurchaseException', () => {
+            const ticketService = new TicketService();
+
+            const originalMakePayment = TicketPaymentService.prototype.makePayment;
+            TicketPaymentService.prototype.makePayment = function () {
+                throw new Error('Specific payment error');
+            };
+
+            expect(() => {
+                ticketService.purchaseTickets(1, new TicketTypeRequest('ADULT', 1));
+            }).toThrow('Payment or seat reservation failed: Specific payment error');
+
+            TicketPaymentService.prototype.makePayment = originalMakePayment;
         });
     });
 
