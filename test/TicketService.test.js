@@ -38,6 +38,20 @@ describe('TicketService', () => {
                 ticketService.purchaseTickets(1, new TicketTypeRequest('ADULT', 0));
             }).toThrow(InvalidPurchaseException);
         });
+        it('should throw an error for unknown ticket type during calculation', () => {
+            const ticketService = new TicketService();
+
+            const validRequest = new TicketTypeRequest('ADULT', 1);
+
+            const originalGetTicketType = validRequest.getTicketType;
+            validRequest.getTicketType = () => 'UNKNOWN_TYPE';
+
+            expect(() => {
+                ticketService.purchaseTickets(1, validRequest);
+            }).toThrow('Unknown ticket type: UNKNOWN_TYPE');
+
+            validRequest.getTicketType = originalGetTicketType;
+        });
         // Business Rules Tests
         it('should throw an error if more than 25 tickets are requested', () => {
             const ticketService = new TicketService();
