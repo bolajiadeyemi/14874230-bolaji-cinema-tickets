@@ -9,7 +9,8 @@
   "scripts": {
     "test": "jest --passWithNoTests",
     "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "test:integration": "jest --testPathPatterns=integration --passWithNoTests"
   },
   "devDependencies": {
     "@jest/globals": "^30.1.2",
