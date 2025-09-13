@@ -2,23 +2,16 @@ import TicketTypeRequest from './lib/TicketTypeRequest.js';
 import InvalidPurchaseException from './lib/InvalidPurchaseException.js';
 import TicketPaymentService from '../thirdparty/paymentgateway/TicketPaymentService.js';
 import SeatReservationService from '../thirdparty/seatbooking/SeatReservationService.js';
+import { TICKET_TYPES, defaultConfig } from './config.js';
 
 export default class TicketService {
   #ticketPaymentService;
   #seatReservationService;
-  static #TICKET_TYPES = {
-    INFANT: 'INFANT',
-    CHILD: 'CHILD',
-    ADULT: 'ADULT'
-  };
+  static #TICKET_TYPES = TICKET_TYPES;
 
-  #TICKET_PRICES = {
-    [TicketService.#TICKET_TYPES.INFANT]: 0,
-    [TicketService.#TICKET_TYPES.CHILD]: 15,
-    [TicketService.#TICKET_TYPES.ADULT]: 25
-  };
+  #TICKET_PRICES = defaultConfig.pricesPence;
 
-  #MAX_TICKETS = 25;
+  #MAX_TICKETS = defaultConfig.maxTickets;
 
   constructor() {
     this.#ticketPaymentService = new TicketPaymentService();
@@ -109,7 +102,7 @@ export default class TicketService {
       const noOfTickets = request.getNoOfTickets();
 
       ticketCounts[ticketType] += noOfTickets;
-      totalAmount += this.#TICKET_PRICES[ticketType] * noOfTickets;
+      totalAmount += this.#TICKET_PRICES[ticketType] / 100 * noOfTickets;
 
       // Infants don't need seats (they sit on adult's lap)
       if (ticketType !== TicketService.#TICKET_TYPES.INFANT) {
