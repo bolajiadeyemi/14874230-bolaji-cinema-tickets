@@ -4,14 +4,14 @@ import InvalidPurchaseException from './src/pairtest/lib/InvalidPurchaseExceptio
 
 /**
  * Cinema Tickets Demo
- * 
+ *
  * This demo showcases the TicketService functionality with various scenarios:
  * - Valid purchases
  * - Business rule violations
  * - Error handling
  */
 
-console.log('🎬 Cinema Tickets Service Demo\n');
+console.log('Cinema Tickets Service Demo\n');
 console.log('='.repeat(50));
 
 const ticketService = new TicketService();
@@ -19,13 +19,13 @@ const ticketService = new TicketService();
 // Demo scenarios
 const scenarios = [
   {
-    name: '✅ Valid: Adult tickets only',
+    name: 'Valid: Adult tickets only',
     accountId: 1001,
     requests: [new TicketTypeRequest('ADULT', 2)],
     expected: 'Success - 2 adults: £50.00, 2 seats'
   },
   {
-    name: '✅ Valid: Mixed family booking',
+    name: 'Valid: Mixed family booking',
     accountId: 1002,
     requests: [
       new TicketTypeRequest('ADULT', 2),
@@ -35,13 +35,13 @@ const scenarios = [
     expected: 'Success - 2 adults + 3 children + 1 infant: £95.00, 5 seats'
   },
   {
-    name: '✅ Valid: Maximum tickets (25)',
+    name: 'Valid: Maximum tickets (25)',
     accountId: 1003,
     requests: [new TicketTypeRequest('ADULT', 25)],
     expected: 'Success - 25 adults: £625.00, 25 seats'
   },
   {
-    name: '✅ Valid: Infants equal to adults',
+    name: 'Valid: Infants equal to adults',
     accountId: 1004,
     requests: [
       new TicketTypeRequest('ADULT', 3),
@@ -50,19 +50,19 @@ const scenarios = [
     expected: 'Success - 3 adults + 3 infants: £75.00, 3 seats'
   },
   {
-    name: '❌ Invalid: Too many tickets (26)',
+    name: 'Invalid: Too many tickets (26)',
     accountId: 1005,
     requests: [new TicketTypeRequest('ADULT', 26)],
     expected: 'Error - Exceeds maximum of 25 tickets'
   },
   {
-    name: '❌ Invalid: Child without adult',
+    name: 'Invalid: Child without adult',
     accountId: 1006,
     requests: [new TicketTypeRequest('CHILD', 2)],
     expected: 'Error - Child tickets require adult supervision'
   },
   {
-    name: '❌ Invalid: More infants than adults',
+    name: 'Invalid: More infants than adults',
     accountId: 1007,
     requests: [
       new TicketTypeRequest('ADULT', 1),
@@ -71,13 +71,13 @@ const scenarios = [
     expected: 'Error - Infants cannot exceed adults (lap seating)'
   },
   {
-    name: '❌ Invalid: Zero account ID',
+    name: 'Invalid: Zero account ID',
     accountId: 0,
     requests: [new TicketTypeRequest('ADULT', 1)],
     expected: 'Error - Invalid account ID'
   },
   {
-    name: '❌ Invalid: Negative account ID',
+    name: 'Invalid: Negative account ID',
     accountId: -5,
     requests: [new TicketTypeRequest('ADULT', 1)],
     expected: 'Error - Invalid account ID'
@@ -89,7 +89,7 @@ function calculateExpected(requests) {
   const prices = { ADULT: 25, CHILD: 15, INFANT: 0 };
   let totalCost = 0;
   let totalSeats = 0;
-  let summary = [];
+  const summary = [];
 
   for (const request of requests) {
     const type = request.getTicketType();
@@ -123,25 +123,25 @@ scenarios.forEach((scenario, index) => {
 
     // If successful, show the details
     const expected = calculateExpected(scenario.requests);
-    console.log(`   Account ID: ${scenario.accountId}`);
-    console.log(`   Tickets: ${expected.summary}`);
-    console.log(`   Total Cost: £${expected.cost.toFixed(2)}`);
-    console.log(`   Seats Reserved: ${expected.seats}`);
-    console.log(`   ✅ Purchase completed successfully!`);
+    console.log(`Account ID: ${scenario.accountId}`);
+    console.log(`Tickets: ${expected.summary}`);
+    console.log(`Total Cost: £${expected.cost.toFixed(2)}`);
+    console.log(`Seats Reserved: ${expected.seats}`);
+    console.log('Purchase completed successfully!');
 
   } catch (error) {
     if (error instanceof InvalidPurchaseException) {
-      console.log(`   Account ID: ${scenario.accountId}`);
-      console.log(`   ❌ Purchase failed: ${error.message}`);
+      console.log(`Account ID: ${scenario.accountId}`);
+      console.log(`Purchase failed: ${error.message}`);
     } else {
-      console.log(`   ❌ Unexpected error: ${error.message}`);
+      console.log(`Unexpected error: ${error.message}`);
     }
   }
 });
 
 // Business Rules Summary
 console.log('\n' + '='.repeat(50));
-console.log('📋 Business Rules Summary');
+console.log('Business Rules Summary');
 console.log('='.repeat(50));
 console.log('• Adult tickets: £25.00 (gets a seat)');
 console.log('• Child tickets: £15.00 (gets a seat, requires adult)');
@@ -151,4 +151,4 @@ console.log('• Child/Infant tickets require Adult tickets');
 console.log('• Infants cannot exceed Adults (lap seating)');
 console.log('• Account ID must be a positive integer');
 
-console.log('\n🎭 Demo completed!');
+console.log('\n Demo completed!');

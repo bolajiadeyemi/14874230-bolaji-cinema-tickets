@@ -2,6 +2,14 @@
 
 A ticket purchasing service for cinema bookings with payment and seat reservation third-party service integration.
 
+## Architecture
+
+The system follows a clean architecture pattern with separation of concerns:
+
+- **TicketService**: Main service orchestrating the ticket purchase workflow
+- **Domain**: Contains all business logic, validation rules, and calculations
+- **TicketTypeRequest**: Immutable value object for ticket requests
+- **Third-party Services**: Payment gateway and seat reservation integrations
 
 ## Installation
 
@@ -96,6 +104,17 @@ export const defaultConfig = {
   maxTickets: 25
 };
 ```
+
+## Domain Logic
+
+The `Domain` class encapsulates all business logic and validation:
+
+- **Account Validation**: Ensures account IDs are positive integers
+- **Request Validation**: Validates TicketTypeRequest instances
+- **Calculations**: Computes totals for amount, seats, and ticket counts
+- **Business Rules**: Enforces max tickets, adult supervision, and infant lap seating
+
+This separation allows for easier testing and maintenance of business logic.
 
 ## Development
 
