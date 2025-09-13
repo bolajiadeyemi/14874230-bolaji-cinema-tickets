@@ -11,6 +11,7 @@
     "test:watch": "node --experimental-vm-modules node_modules/.bin/jest --watchAll",
     "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
     "test:integration": "node --experimental-vm-modules node_modules/.bin/jest --testPathPatterns=integration --passWithNoTests",
+    "demo": "node --experimental-vm-modules demo.js",
     "lint": "eslint --ignore-path .gitignore \"{src,test}/**/*.js\"",
     "lint:fix": "eslint --ignore-path .gitignore \"{src,test}/**/*.js\" --fix",
     "security:check": "echo \"Checking for security vulnerabilities...\" && npm audit"

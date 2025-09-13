@@ -121,16 +121,22 @@ export default class TicketService {
    * @private
    */
   #applyBusinessRules(ticketCounts) {
+    this.#checkMaximumTickets(ticketCounts);
+    this.#checkAdultSupervision(ticketCounts);
+    this.#checkInfantLapSeating(ticketCounts);
+  }
+
+  #checkMaximumTickets(ticketCounts) {
     const totalTickets = ticketCounts[TicketService.#TICKET_TYPES.INFANT] +
       ticketCounts[TicketService.#TICKET_TYPES.CHILD] +
       ticketCounts[TicketService.#TICKET_TYPES.ADULT];
 
-    // Check maximum ticket limit
     if (totalTickets > this.#MAX_TICKETS) {
       throw new InvalidPurchaseException(`Cannot purchase more than ${this.#MAX_TICKETS} tickets at once`);
     }
+  }
 
-    // Check that child and infant tickets are accompanied by adult tickets
+  #checkAdultSupervision(ticketCounts) {
     const hasChildOrInfant = ticketCounts[TicketService.#TICKET_TYPES.CHILD] > 0 ||
       ticketCounts[TicketService.#TICKET_TYPES.INFANT] > 0;
     const hasAdult = ticketCounts[TicketService.#TICKET_TYPES.ADULT] > 0;
@@ -138,8 +144,9 @@ export default class TicketService {
     if (hasChildOrInfant && !hasAdult) {
       throw new InvalidPurchaseException('Child and Infant tickets cannot be purchased without Adult tickets');
     }
+  }
 
-    // Check that there are enough adults for infants (assuming 1 infant per adult max)
+  #checkInfantLapSeating(ticketCounts) {
     if (ticketCounts[TicketService.#TICKET_TYPES.INFANT] > ticketCounts[TicketService.#TICKET_TYPES.ADULT]) {
       throw new InvalidPurchaseException('Cannot have more Infant tickets than Adult tickets (infants sit on adult laps)');
     }

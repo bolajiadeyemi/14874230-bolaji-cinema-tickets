@@ -42,6 +42,18 @@ const childTickets = new TicketTypeRequest('CHILD', 1);
 const infantTickets = new TicketTypeRequest('INFANT', 1);
 ```
 
+## Demo
+
+### Run Interactive Demo
+```bash
+npm run demo
+```
+
+The demo showcases various ticket purchasing scenarios including:
+- Valid purchases (adults only, mixed families, maximum tickets)
+- Business rule violations (too many tickets, missing adults, etc.)
+- Error handling and validation
+
 ## Testing
 
 ### Run All Tests
